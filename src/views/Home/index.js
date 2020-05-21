@@ -1,12 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as S from './styled';
+
+import api from '../../service/api';
+
 //components
 import Header from '../../components/Header/index';
 import Footer from '../../components/Footer/index';
 import FilterCard from '../../components/FilterCard';
 import TaskCard from '../../components/TaskCard/index';
 function Home() {
-  const [filterActived, setFilterActived] = useState();
+  const [filterActived, setFilterActived] = useState('all');
+  const [tasks, setTasks] = useState([]);
+  async function loadTask() {
+    await api
+      .get(`/task/filter/${filterActived}/11:11:11:11:11:11`)
+      .then((response) => {
+        setTasks(response.data);
+        console.log(response);
+      })
+      .catch((response) => {
+        console.log(response);
+      });
+  }
+
+  useEffect(() => {
+    loadTask();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterActived]);
+
   return (
     <S.Container>
       <Header />
@@ -32,16 +53,9 @@ function Home() {
         </S.Title>
       </S.FilterArea>
       <S.Content>
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
+        {tasks.map((t) => (
+          <TaskCard />
+        ))}
       </S.Content>
       <Footer />
     </S.Container>
