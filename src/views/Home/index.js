@@ -54,7 +54,7 @@ function Home() {
       </S.FilterArea>
       <S.Content>
         {tasks.map((t) => (
-          <TaskCard />
+          <TaskCard type={t.type} title={t.title} when={t.when} />
         ))}
       </S.Content>
       <Footer />
