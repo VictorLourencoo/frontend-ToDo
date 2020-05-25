@@ -3,7 +3,7 @@ import * as S from './styles';
 
 import logo from '../../assets/logo.png';
 import bell from '../../assets/bell.png';
-function Header() {
+function Header(props) {
   return (
     <S.Container>
       <S.leftSide>
@@ -16,10 +16,10 @@ function Header() {
         <span className="dividir" />
         <a href="#">SINCRONIZAR CELULAR</a>
         <span className="dividir" />
-        <a href="#" id="Notification">
+        <button id="Notification" onClick={props.clickNotification}>
           <img src={bell} alt="Notification" />
-          <span>5</span>
-        </a>
+          <span>{props.lateCount}</span>
+        </button>
       </S.RightSide>
     </S.Container>
   );

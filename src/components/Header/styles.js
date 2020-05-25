@@ -31,11 +31,12 @@ export const RightSide = Styled.div`
   align-items: center;
   justify-content: flex-end;
 
-  a{
+  a, button{
     color: #FFF;
     font-weight: bold;
     text-decoration: none;
     margin: 0px 10px;
+    cursor: pointer;
 
 
     &:hover{
@@ -48,7 +49,9 @@ export const RightSide = Styled.div`
     &:hover{
         opacity: 0.5;
     }
-    img{
+    background: none;
+    border  : none;
+        img{
       width:25px;
       height:30px;
     }
