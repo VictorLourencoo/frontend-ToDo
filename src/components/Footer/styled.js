@@ -6,7 +6,7 @@ export const Container = Styled.div`
   background: #20295f;
   border-top: 5px solid #EE6B26;
 
-  position: absolute;
+  
   bottom: 0px;
   display: flex;
   align-items: center;
