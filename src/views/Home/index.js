@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import * as S from './styled';
 
 import api from '../../service/api';
@@ -71,9 +72,18 @@ function Home() {
         </S.Title>
       </S.FilterArea>
       <S.Content>
-        {tasks.map((t) => (
-          <TaskCard type={t.type} title={t.title} when={t.when} />
-        ))}
+        {tasks.map((t) => {
+          return (
+            <Link key={t.id} to={`/task/${t._id}`}>
+              <TaskCard
+                key={t._id}
+                type={t.type}
+                title={t.title}
+                when={t.when}
+              />
+            </Link>
+          );
+        })}
       </S.Content>
       <Footer />
     </S.Container>
@@ -81,3 +91,5 @@ function Home() {
 }
 
 export default Home;
+
+// <Link to={`/task/${t._id}`}>,

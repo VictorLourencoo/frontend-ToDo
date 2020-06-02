@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 //import MaskedInput from 'react-text-mask';
 import * as S from './Styled';
+import { Redirect } from 'react-router-dom';
 
 import api from '../../service/api';
-//import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 
 //components
 import Header from '../../components/Header/index';
@@ -13,7 +14,8 @@ import Icons from '../../utils/typeIcons';
 import IconCalendar from '../../assets/calendar.png';
 import IconClock from '../../assets/clock.png';
 
-function Task() {
+function Task({ match }) {
+  const [redirect, setRedirect] = useState(false);
   const [lateCount, setLateCount] = useState();
   const [type, setType] = useState(1);
 
@@ -36,36 +38,63 @@ function Task() {
         console.log(response);
       });
   }
+  //match = retorna params de navegação
+  async function loadDetails() {
+    await api.get(`/task/${match.params.id}`).then((response) => {
+      setType(response.data.type);
+      setTitle(response.data.title);
+      setDescription(response.data.description);
+      setData(format(new Date(response.data.when), 'yyyy-MM-dd'));
+      setHora(format(new Date(response.data.when), 'HH:mm'));
+    });
+  }
+  //const when = parse(data, 'yyyy-MM-ddHH:mm:ss.SSS', new Date());
+  //let when = format(new Date(data), 'yyyy-MM-ddHH:mm:ss.SSS');
+  //console.log(when);
 
   async function Save() {
-    console.log(title, data, hora);
-
-    //const when = parse(data, 'yyyy-MM-ddHH:mm:ss.SSS', new Date());
-    //let when = format(new Date(data), 'yyyy-MM-ddHH:mm:ss.SSS');
-    //console.log(when);
-    await api
-      .post('/task', {
-        type,
-        macaddress,
-        title,
-        description,
-        when: `${data}T${hora}:00.000`,
-      })
-      .then(() => {
-        alert('Tarefada cadastrada');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (match.params.id) {
+      await api
+        .put(`/task/${match.params.id}`, {
+          done,
+          type,
+          macaddress,
+          title,
+          description,
+          when: `${data}T${hora}:00.000`,
+        })
+        .then(() => {
+          setRedirect(true);
+        });
+    } else {
+      await api
+        .post('/task', {
+          type,
+          macaddress,
+          title,
+          description,
+          when: `${data}T${hora}:00.000`,
+        })
+        .then((response) => {
+          console.log(response.data);
+          setRedirect(true);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }
 
   useEffect(() => {
     lateVerify();
+    loadDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   //(setWhen(format(new Date(date, hour), 'yyyy-MM-ddTHH:mm:ss.SSS')),
 
   return (
     <S.Container>
+      {redirect && <Redirect to="/" />}
       <Header lateCount={lateCount} />
 
       <S.Form>
@@ -76,7 +105,11 @@ function Task() {
             Icons.map(
               (icon, index) =>
                 index > 0 && (
-                  <button type="button" onClick={() => setType(index)}>
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => setType(index)}
+                  >
                     <img
                       src={icon}
                       alt="Tipos de tarefa"
@@ -116,7 +149,6 @@ function Task() {
             value={data}
             onChange={(e) => setData(e.target.value)}
             //mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-            guide={false}
             required
             minLength="10"
             // maxLength="10"
@@ -132,7 +164,6 @@ function Task() {
             value={hora}
             onChange={(e) => setHora(e.target.value)}
             mask={[/\d/, /\d/, ':', /\d/, /\d/]}
-            guide={false}
             required
             minLength="5"
             maxLength="5"
@@ -153,7 +184,12 @@ function Task() {
         </S.Options>
 
         <S.Save>
-          <button type="button" onClick={Save()}>
+          <button
+            type="button"
+            onClick={() => {
+              Save();
+            }}
+          >
             Salvar
           </button>
         </S.Save>

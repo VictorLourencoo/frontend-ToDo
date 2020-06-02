@@ -1,6 +1,6 @@
 import React from 'react';
 import * as S from './styles';
-
+import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import bell from '../../assets/bell.png';
 function Header(props) {
@@ -10,14 +10,20 @@ function Header(props) {
         <img src={logo} alt="logo" />
       </S.leftSide>
       <S.RightSide>
-        <a href="#">INÍCIO</a>
+        <Link to="/" href="#">
+          INÍCIO
+        </Link>
         <span className="dividir" />
-        <a href="#">NOVA TAREFA</a>
+
+        <Link to="/task"> NOVA TAREFA</Link>
         <span className="dividir" />
+
         <a href="#">SINCRONIZAR CELULAR</a>
         <span className="dividir" />
+
         <button id="Notification" onClick={props.clickNotification}>
           <img src={bell} alt="Notification" />
+
           <span>{props.lateCount}</span>
         </button>
       </S.RightSide>

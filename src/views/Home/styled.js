@@ -25,6 +25,12 @@ export const Content = Styled.div`
     flex-wrap: wrap;
     justify-content: center;
 
+    a{
+        text-decoration: none;
+        color: #000;
+    }
+
+
 `;
 
 export const Title = Styled.div`
