@@ -53,6 +53,18 @@ function Task({ match }) {
   //console.log(when);
 
   async function Save() {
+    if (!title) {
+      return alert('Você precisa informar o titulo');
+    } else if (!description) {
+      return alert('Você precisa informar a descrição da tarefa');
+    } else if (!data) {
+      return alert('Você precisa definir a data da tarefa');
+    } else if (!hora) {
+      return alert('Você precisa definir a hora da tarefa');
+    } else if (!type) {
+      return alert('voce precisa selecionar o tipo da tarefa');
+    }
+
     if (match.params.id) {
       await api
         .put(`/task/${match.params.id}`, {
